@@ -10,6 +10,7 @@ import (
 
 	"github.com/bitrise-io/go-utils/log"
 	"github.com/bitrise-tools/go-steputils/stepconf"
+	"github.com/bitrise-tools/go-steputils/tools"
 	"github.com/google/go-github/github"
 )
 
@@ -96,6 +97,9 @@ func main() {
 	fmt.Println()
 	log.Infof("Release created:")
 	log.Printf(newRelease.GetHTMLURL())
+	if err := tools.ExportEnvironmentWithEnvman("BITRISE_GIT_RELEASE_URL", newRelease.GetHTMLURL()); err != nil {
+		failf("Failed to export Release URL to (BITRISE_GIT_RELEASE_URL), error: %s", err)
+	}
 
 	if filelist := strings.TrimSpace(c.FilesToUpload); filelist != "" {
 		fmt.Println()
